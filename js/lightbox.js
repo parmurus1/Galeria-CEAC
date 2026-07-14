@@ -46,9 +46,11 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") Lightbox.close();
 });
 
-// O arquivo fica num domínio diferente (Supabase Storage), então o atributo
-// "download" sozinho é ignorado pelo navegador e ele apenas abre em outra guia.
-// Para forçar o download de verdade, baixamos o arquivo como blob primeiro.
+// No iPhone (Safari), não existe uma forma de forçar o download de um arquivo
+// direto para o app Fotos — o navegador não suporta o atributo "download" para
+// isso. A solução que funciona de verdade é abrir o menu nativo de compartilhar
+// (Web Share API), de onde a pessoa escolhe "Guardar imagem" / "Guardar vídeo".
+// Em desktop e Android, cai automaticamente no download normal por blob.
 document.getElementById("lightbox-download").addEventListener("click", async (e) => {
   e.preventDefault();
   const btn = e.currentTarget;
@@ -58,7 +60,7 @@ document.getElementById("lightbox-download").addEventListener("click", async (e)
 
   const originalLabel = btn.innerHTML;
   btn.style.pointerEvents = "none";
-  btn.textContent = "Baixando…";
+  btn.textContent = "Preparando…";
 
   try {
     const response = await fetch(url);
@@ -68,7 +70,21 @@ document.getElementById("lightbox-download").addEventListener("click", async (e)
     const ext = (item.storage_path.split(".").pop() || "").split("?")[0];
     const safeTitle = item.title.replace(/[\\/:*?"<>|]/g, "").trim() || "arquivo";
     const filename = ext ? `${safeTitle}.${ext}` : safeTitle;
+    const file = new File([blob], filename, { type: blob.type });
 
+    // Celular (iPhone e a maioria dos Android): abre o menu de compartilhar,
+    // que tem a opção de salvar direto na galeria/Fotos.
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: item.title });
+        return;
+      } catch (shareErr) {
+        if (shareErr.name === "AbortError") return; // a pessoa cancelou o compartilhamento
+        // se o compartilhar falhar por outro motivo, cai no download normal abaixo
+      }
+    }
+
+    // Desktop (ou navegadores sem suporte a compartilhar arquivos): download direto.
     const blobUrl = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = blobUrl;
