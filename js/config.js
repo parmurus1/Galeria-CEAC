@@ -8,7 +8,7 @@
 // =========================================================
 
 const SUPABASE_CONFIG = {
-  url: "https://SEU-PROJETO.supabase.co",
-  anonKey: "SUA-ANON-KEY-AQUI",
-  mediaBucket: "media" // nome do bucket de Storage criado no Supabase
+  url: "https://ckvutolpibvaobwcrirl.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrdnV0b2xwaWJ2YW9id2NyaXJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5ODIxNTYsImV4cCI6MjA5OTU1ODE1Nn0.rR9h3TPT-sGKzBJC2GztCRvpSJz_R4ANWxR6zaa99Ag",
+  mediaBucket: "media"
 };
