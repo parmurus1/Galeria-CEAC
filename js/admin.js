@@ -5,6 +5,7 @@
 const Admin = {
   pendingDelete: null, // { type: 'folder'|'media', target }
   editingItem: null,
+  renamingFolder: null, // folder being renamed, or null when creating a new one
 
   async createFolder(name) {
     const { error } = await sb.from("folders").insert({
@@ -14,6 +15,25 @@ const Admin = {
     });
     if (error) throw error;
     showToast("Pasta criada com sucesso.");
+    await Gallery.load();
+  },
+
+  openRenameFolder(folder) {
+    this.renamingFolder = folder;
+    document.getElementById("modal-folder-title").textContent = "Renomear pasta";
+    document.getElementById("folder-submit").textContent = "Salvar";
+    document.getElementById("folder-name").value = folder.name;
+    document.getElementById("folder-error").classList.add("hidden");
+    ModalUI.open("modal-folder");
+  },
+
+  async renameFolder(id, newName) {
+    const { error } = await sb.from("folders").update({ name: newName }).eq("id", id);
+    if (error) throw error;
+    showToast("Pasta renomeada com sucesso.");
+    // atualiza o nome na trilha (breadcrumb) se a pasta atual estiver aberta
+    const crumb = Gallery.path.find(p => p.id === id);
+    if (crumb) crumb.name = newName;
     await Gallery.load();
   },
 

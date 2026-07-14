@@ -129,6 +129,9 @@ const Gallery = {
       <p class="folder-name">${escapeHtml(folder.name)}</p>
       ${isAdmin ? `
       <div class="card-admin-actions">
+        <button class="icon-btn" data-action="rename-folder" title="Renomear pasta">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+        </button>
         <button class="icon-btn icon-danger" data-action="delete-folder" title="Excluir pasta">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
         </button>
@@ -139,6 +142,10 @@ const Gallery = {
       this.goTo(folder.id, folder.name);
     });
     if (isAdmin) {
+      card.querySelector('[data-action="rename-folder"]').addEventListener("click", (e) => {
+        e.stopPropagation();
+        Admin.openRenameFolder(folder);
+      });
       card.querySelector('[data-action="delete-folder"]').addEventListener("click", (e) => {
         e.stopPropagation();
         Admin.confirmDeleteFolder(folder);

@@ -114,14 +114,14 @@
 <div class="modal-overlay hidden" id="modal-folder">
   <div class="modal modal-small">
     <button class="modal-close" data-close-modal="modal-folder" aria-label="Fechar">&times;</button>
-    <h2 class="modal-title">Nova pasta</h2>
+    <h2 class="modal-title" id="modal-folder-title">Nova pasta</h2>
     <form id="form-folder">
       <label class="field">
         <span>Nome da pasta</span>
         <input type="text" id="folder-name" placeholder="Ex: Culto de Jovens 2026" required maxlength="80">
       </label>
       <p class="form-error hidden" id="folder-error"></p>
-      <button type="submit" class="btn-solid btn-full">Criar pasta</button>
+      <button type="submit" class="btn-solid btn-full" id="folder-submit">Criar pasta</button>
     </form>
   </div>
 </div>

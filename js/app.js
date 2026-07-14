@@ -45,6 +45,9 @@ document.getElementById("form-login").addEventListener("submit", async (e) => {
 
 // ---------- Nova pasta ----------
 document.getElementById("btn-new-folder").addEventListener("click", () => {
+  Admin.renamingFolder = null;
+  document.getElementById("modal-folder-title").textContent = "Nova pasta";
+  document.getElementById("folder-submit").textContent = "Criar pasta";
   document.getElementById("folder-name").value = "";
   document.getElementById("folder-error").classList.add("hidden");
   ModalUI.open("modal-folder");
@@ -56,12 +59,17 @@ document.getElementById("form-folder").addEventListener("submit", async (e) => {
   const errorEl = document.getElementById("folder-error");
   if (!name) return;
   try {
-    await Admin.createFolder(name);
+    if (Admin.renamingFolder) {
+      await Admin.renameFolder(Admin.renamingFolder.id, name);
+      Admin.renamingFolder = null;
+    } else {
+      await Admin.createFolder(name);
+    }
     ModalUI.close("modal-folder");
     e.target.reset();
   } catch (err) {
     console.error(err);
-    errorEl.textContent = "Não foi possível criar a pasta. Tente novamente.";
+    errorEl.textContent = "Não foi possível salvar a pasta. Tente novamente.";
     errorEl.classList.remove("hidden");
   }
 });
