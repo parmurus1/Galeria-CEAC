@@ -38,7 +38,36 @@ body{
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
+body::before, body::after{
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.06;
+  filter: grayscale(1) contrast(1.1);
+}
+body::before{
+  top: 6vh;
+  right: -6vw;
+  width: min(38vw, 420px);
+  height: min(38vw, 420px);
+  background-image: url("../assets/bg-texture-2.png");
+  transform: rotate(8deg);
+}
+body::after{
+  bottom: 4vh;
+  left: -8vw;
+  width: min(34vw, 380px);
+  height: min(34vw, 380px);
+  background-image: url("../assets/bg-texture-1.png");
+  transform: rotate(-10deg);
+}
+.site-header, .hero, .main, .site-footer{ position: relative; z-index: 1; }
 img{ max-width: 100%; display:block; }
 a{ color: inherit; }
 button{ font-family: inherit; }
@@ -207,22 +236,31 @@ button{ font-family: inherit; }
   color: var(--cream);
   font-size: clamp(2.6rem, 8vw, 5rem);
 }
-.hero-title span{
+.hero-title > span{
   display: block;
   opacity: 0;
   transform: translateY(22px);
   animation: rise-in .7s cubic-bezier(.2,.8,.2,1) forwards;
 }
-.hero-title span:nth-child(1){ animation-delay: .05s; }
-.hero-title span:nth-child(2){ animation-delay: .18s; }
-.hero-title span:nth-child(3){ animation-delay: .32s; }
+.hero-title > span:nth-child(1){ animation-delay: .05s; }
+.hero-title > span:nth-child(2){ animation-delay: .18s; }
+.hero-title > span:nth-child(3){ animation-delay: .32s; }
+
+.hero-title-line3{
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
 
 .hero-title-accent{
   color: #14110c;
   background: var(--gold);
   display: inline-block !important;
   padding: 2px 16px;
-  margin-top: 10px;
+  margin-top: 0;
   transform: rotate(-1deg);
   border-radius: 3px;
   box-shadow:
@@ -232,6 +270,32 @@ button{ font-family: inherit; }
   transition: transform .3s ease;
 }
 .hero-title-accent:hover{ transform: rotate(1.5deg) scale(1.03); }
+
+/* "registro" as cut-out newspaper clipping letters, ransom-note style */
+.clip-word{
+  display: inline-flex;
+  align-items: center;
+  font-style: normal;
+  font-family: var(--font-display);
+}
+.clip{
+  display: inline-block;
+  font-size: 0.62em;
+  line-height: 1;
+  padding: 7px 6px 5px;
+  margin: 0 -2px;
+  color: #171310;
+  background: #ece3ce;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.15), 0 6px 10px rgba(0,0,0,0.35);
+  border: 1px solid rgba(23,19,16,0.12);
+  border-radius: 2px;
+}
+.clip:nth-child(odd){ background: #ece3ce; transform: rotate(-5deg) translateY(2px); }
+.clip:nth-child(even){ background: var(--gold); transform: rotate(4deg) translateY(-3px); }
+.clip:nth-child(3n){ transform: rotate(-7deg) translateY(-2px); background: #d8cdb2; }
+.clip:nth-child(4n){ transform: rotate(6deg) translateY(3px); }
+.clip:hover{ transform: rotate(0deg) translateY(-4px) scale(1.08); transition: transform .2s ease; z-index: 2; position: relative; }
+
 .hero-title-accent em{ font-style: italic; font-family: var(--font-script); font-weight: 600; }
 
 .hero-quote{
