@@ -19,6 +19,7 @@ const Lightbox = {
     const downloadBtn = document.getElementById("lightbox-download");
     downloadBtn.href = url;
     downloadBtn.setAttribute("download", item.title);
+    downloadBtn.dataset.url = url;
 
     const editBtn = document.getElementById("lightbox-edit");
     const deleteBtn = document.getElementById("lightbox-delete");
@@ -43,4 +44,44 @@ document.getElementById("lightbox").addEventListener("click", (e) => {
 });
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") Lightbox.close();
+});
+
+// O arquivo fica num domínio diferente (Supabase Storage), então o atributo
+// "download" sozinho é ignorado pelo navegador e ele apenas abre em outra guia.
+// Para forçar o download de verdade, baixamos o arquivo como blob primeiro.
+document.getElementById("lightbox-download").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const btn = e.currentTarget;
+  const item = Lightbox.currentItem;
+  const url = btn.dataset.url;
+  if (!item || !url) return;
+
+  const originalLabel = btn.innerHTML;
+  btn.style.pointerEvents = "none";
+  btn.textContent = "Baixando…";
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Falha ao buscar o arquivo");
+    const blob = await response.blob();
+
+    const ext = (item.storage_path.split(".").pop() || "").split("?")[0];
+    const safeTitle = item.title.replace(/[\\/:*?"<>|]/g, "").trim() || "arquivo";
+    const filename = ext ? `${safeTitle}.${ext}` : safeTitle;
+
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 4000);
+  } catch (err) {
+    console.error(err);
+    showToast("Não foi possível baixar o arquivo. Tente novamente.", "error");
+  } finally {
+    btn.style.pointerEvents = "";
+    btn.innerHTML = originalLabel;
+  }
 });
