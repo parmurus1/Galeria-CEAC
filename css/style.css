@@ -273,15 +273,24 @@ button{ font-family: inherit; }
   padding-bottom: 18px;
   border-bottom: 1px solid var(--line);
 }
-.breadcrumb{ display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.breadcrumb{ display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .crumb{
-  background: none; border: none; color: var(--cream-dim);
-  font-size: 0.86rem; cursor: pointer; padding: 4px 6px; border-radius: 5px;
-  font-weight: 500;
+  background: var(--bg-card);
+  border: 1px solid var(--line-strong);
+  color: var(--cream-dim);
+  font-size: 0.84rem; cursor: pointer; padding: 7px 14px; border-radius: 20px;
+  font-weight: 600;
+  transition: background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
 }
-.crumb:hover{ color: var(--gold-bright); }
-.crumb.is-active{ color: var(--gold); font-weight: 600; }
-.crumb-sep{ color: var(--line-strong); font-size: 0.8rem; margin: 0 -2px; }
+.crumb:hover{ color: var(--gold-bright); border-color: var(--gold); background: var(--bg-elevated); transform: translateY(-1px); }
+.crumb:active{ transform: translateY(0) scale(0.97); }
+.crumb.is-active{
+  color: #14110c;
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.crumb.is-active:hover{ color: #14110c; background: var(--gold-bright); border-color: var(--gold-bright); }
+.crumb-sep{ color: var(--line-strong); font-size: 0.9rem; margin: 0 -1px; }
 .admin-controls{ display: flex; gap: 10px; }
 
 /* ---------- Loading / empty ---------- */
